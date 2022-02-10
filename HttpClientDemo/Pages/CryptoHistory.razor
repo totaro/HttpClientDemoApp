@@ -1,0 +1,158 @@
+﻿@page "/cryptohistory"
+
+
+@inject IHttpClientFactory _clientFactory
+
+
+@*<h3>Weather Data: @forecast.Title@forecast.Title (@forecast.Timezone || Rise: @forecast.Sun_rise | Set @forecast.Sun_set</h3>*@
+<h3>Crypto Data : Bitcoin : History</h3>
+
+<form action="/cryptohistory?fromtime=fromtime&totime=totime" method="post"> 
+   From : <input type="text" name="fromtime" /> 
+   To: <input type="text" name="totime" /> 
+   <input type="submit" value="Submit" /> 
+ </form>
+
+
+@if (string.IsNullOrWhiteSpace(errorString) == false)
+{
+
+
+
+
+	<div class="h2">@errorString</div>
+}
+else if(cryptohistory is null)
+{
+	<div class="h4">Loading...</div>
+}
+else
+{
+
+	
+	<table class="table table-striped">
+		@*<thead class="thead-dark"><b>@forecast.Title @forecast.Timezone || Rise: @forecast.Sun_rise | Set @forecast.Sun_set<br>Source: https://www.metaweather.com/api/location/565346/</b></thead>*@
+		<thead class="thead-dark">
+			<tr>
+				<th>Day</th>
+				<th>Price</th>
+				@*<th>Market caps</th>
+				<th>Total volumes</th>*@
+				
+			</tr>
+		</thead>
+		<tbody>
+
+			
+
+
+			@foreach (var c in cryptohistory.prices)
+			{
+
+				@*long vOut = Convert.ToInt64(c[0]);*@
+
+				//double vOut = Convert.ToDouble(c[0])
+
+				@*string input = Convert.ToString(c[0]);
+				double d = Double.Parse(input);
+				string rounded_input = string.Format("{0:f3}", d);*@
+
+				@*string name = Convert.ToString(c[0]);
+				string firstThree =  name.Substring(0,10);*@
+
+				
+
+			<tr>
+				
+				@*<td><b>Euro:</b> @crypto.bitcoin.eur</td> @DateTimeOffset.FromUnixTimeSeconds(vOut)
+				<td>@crypto.bitcoin.eur_24h_vol</td>
+				<td>@crypto.bitcoin.eur_24h_change</td>*@
+
+				@*<td>@Date</td>*@
+				@*<td>@c[0]</td>*@
+				<td>@UnixTimeStampToDateTime(Convert.ToDouble(Convert.ToString(c[0]).Substring(0,10)))</td>
+
+				@*<td>@DateTimeOffset.FromUnixTimeMilliseconds(c[0]).DateTime</td>*@
+
+				@*<td>@UnixTimeStampToDateTime(c[0])</td>*@
+				@*<td>@UnixTimeStampToDateTime(Convert.ToDouble(c[0]))</td>*@
+				<td>@Math.Round(c[1],4) €</td>
+				@*<td>@c[1]</td>*@
+				@*<td>@MathF.Round(w.max_temp, 1) C</td>*@
+				
+			</tr>
+
+			
+
+			}
+		</tbody>
+
+	</table>
+}
+
+@code {
+	//HttpClientDemo.Models.WeatherForecastModel
+
+	
+	CryptoCurrencyModel? cryptohistory;
+	string errorString;
+
+	//int wueid = 565346;
+	int fromtime = 1609459200;
+	int totime = 1640797200;
+	//int fromtime;
+	//int totime;
+	
+	protected override async Task OnInitializedAsync()
+	{
+		
+		var uri = $"https://api.coingecko.com/api/v3/coins/bitcoin/market_chart/range?vs_currency=eur&from={fromtime}&to={totime}";
+		
+		var request = new HttpRequestMessage(HttpMethod.Get, uri);
+			
+
+		var client = _clientFactory.CreateClient();
+
+		HttpResponseMessage response = await client.SendAsync(request);
+
+		if (response.IsSuccessStatusCode)
+		{
+			cryptohistory = await response.Content.ReadFromJsonAsync<CryptoCurrencyModel>();
+			errorString = null;
+		}
+		else
+		{
+			errorString = $"There was an error to get crypto response:  {response.ReasonPhrase}";
+		}
+
+		/////////////////////////////////////////////////////--------
+		
+		//////return base.OnInitializedAsync();
+
+		////var client = _clientFactory.CreateClient();
+		//var client = _clientFactory.CreateClient("meta");
+
+		//try
+		//{
+		//	//forecast = await client.GetFromJsonAsync<WeatherForecastModel>("https://www.metaweather.com/api/location/565346/");
+		//	//forecast = await client.GetFromJsonAsync<WeatherForecastModel>($"location/565346/{wueid}");
+		//	forecast = await client.GetFromJsonAsync<WeatherForecastModel>($"location/{wueid}/");
+		//	errorString = null;
+		//} 
+		//catch(Exception ex)
+		//{
+		//	errorString = $"There was an error to get forecast response:  {ex.Message}";
+		//}
+
+		////////////////////////////////////////////////////------------
+	}
+
+	public static DateTime UnixTimeStampToDateTime( double unixTimeStamp )
+{
+    // Unix timestamp is seconds past epoch
+    System.DateTime dtDateTime = new DateTime(1970,1,1,0,0,0,0,System.DateTimeKind.Utc);
+    dtDateTime = dtDateTime.AddSeconds( unixTimeStamp ).ToLocalTime();
+    return dtDateTime;
+}
+
+}

@@ -1,0 +1,138 @@
+﻿@page "/crypto"
+
+
+@inject IHttpClientFactory _clientFactory
+
+
+@*<h3>Weather Data: @forecast.Title@forecast.Title (@forecast.Timezone || Rise: @forecast.Sun_rise | Set @forecast.Sun_set</h3>*@
+<h3>Crypto Data : Bitcoin : Current</h3>
+@if (string.IsNullOrWhiteSpace(errorString) == false)
+{
+	<div class="h2">@errorString</div>
+}
+else if(crypto is null)
+{
+	<div class="h4">Loading...</div>
+}
+else
+{
+
+	DateTime today = DateTime.Now;
+	@today;
+
+	<table class="table table-striped">
+		@*<thead class="thead-dark"><b>@forecast.Title @forecast.Timezone || Rise: @forecast.Sun_rise | Set @forecast.Sun_set<br>Source: https://www.metaweather.com/api/location/565346/</b></thead>*@
+		<thead class="thead-dark">
+			<tr>
+				<th>Currency</th>
+				<th>Volume</th>
+				<th>Change</th>
+				
+			</tr>
+		</thead>
+		<tbody>
+
+			
+
+
+			@*@foreach (var w in forecast.Consolidated_weather)
+			{*@
+			<tr>
+				
+				<td><b>Euro:</b> @crypto.bitcoin.eur</td>
+				<td>@crypto.bitcoin.eur_24h_vol</td>
+				<td>@crypto.bitcoin.eur_24h_change</td>
+				@*<td>@MathF.Round(w.min_temp, 1) C</td>
+				<td>@MathF.Round(w.max_temp, 1) C</td>*@
+				
+			</tr>
+
+			<tr>
+				
+				<td><b>USD:</b> @crypto.bitcoin.usd</td>
+				<td>@crypto.bitcoin.usd_24h_vol</td>
+				<td>@crypto.bitcoin.usd_24h_change</td>
+				@*<td>@MathF.Round(w.min_temp, 1) C</td>
+				<td>@MathF.Round(w.max_temp, 1) C</td>*@
+				
+			</tr>
+
+			<tr>
+				
+				<td><b>GBP:</b> @crypto.bitcoin.gbp</td>
+				<td>@crypto.bitcoin.gbp_24h_vol</td>
+				<td>@crypto.bitcoin.gbp_24h_change</td>
+				@*<td>@MathF.Round(w.min_temp, 1) C</td>
+				<td>@MathF.Round(w.max_temp, 1) C</td>*@
+				
+			</tr>
+
+			<tr>
+				
+				<td><b>JPY:</b> @crypto.bitcoin.jpy</td>
+				<td>@crypto.bitcoin.jpy_24h_vol</td>
+				<td>@crypto.bitcoin.jpy_24h_change</td>
+				@*<td>@MathF.Round(w.min_temp, 1) C</td>
+				<td>@MathF.Round(w.max_temp, 1) C</td>*@
+				
+			</tr>
+
+			@*}*@
+		</tbody>
+
+	</table>
+}
+
+@code {
+	//HttpClientDemo.Models.WeatherForecastModel
+
+	
+	CryptoCurrentModel? crypto;
+	string errorString;
+
+	//int wueid = 565346;
+	
+	protected override async Task OnInitializedAsync()
+	{
+
+		
+		var request = new HttpRequestMessage(HttpMethod.Get,
+			"https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=eur%2Cgbp%2Cusd%2Cjpy&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=true");
+
+		var client = _clientFactory.CreateClient();
+
+		HttpResponseMessage response = await client.SendAsync(request);
+
+		if (response.IsSuccessStatusCode)
+		{
+			crypto = await response.Content.ReadFromJsonAsync<CryptoCurrentModel>();
+			errorString = null;
+		}
+		else
+		{
+			errorString = $"There was an error to get forecast response:  {response.ReasonPhrase}";
+		}
+
+		/////////////////////////////////////////////////////--------
+		
+		//////return base.OnInitializedAsync();
+
+		////var client = _clientFactory.CreateClient();
+		//var client = _clientFactory.CreateClient("meta");
+
+		//try
+		//{
+		//	//forecast = await client.GetFromJsonAsync<WeatherForecastModel>("https://www.metaweather.com/api/location/565346/");
+		//	//forecast = await client.GetFromJsonAsync<WeatherForecastModel>($"location/565346/{wueid}");
+		//	forecast = await client.GetFromJsonAsync<WeatherForecastModel>($"location/{wueid}/");
+		//	errorString = null;
+		//} 
+		//catch(Exception ex)
+		//{
+		//	errorString = $"There was an error to get forecast response:  {ex.Message}";
+		//}
+
+		////////////////////////////////////////////////////------------
+	}
+
+}
