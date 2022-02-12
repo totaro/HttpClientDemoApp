@@ -9,3 +9,5 @@ HttpClient REST API for 2 different calls.
 
 
 <img src="screenshots/screenshot_weather.png">
+
+<img src="screenshots/screenshot_crypto.png">
