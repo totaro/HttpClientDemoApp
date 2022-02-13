@@ -26,11 +26,14 @@ namespace HttpClientDemo
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            //BaseAddress configuration for weatherdata: URI from \HttpClientDemo\appsettings.json
             string uri = Configuration.GetValue<string>("MetaAPI");
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
             services.AddHttpClient();
+
+            //BaseAddress configuration for weatherdata
             services.AddHttpClient("meta", c =>
             {
                 //c.BaseAddress = new Uri(uri);
