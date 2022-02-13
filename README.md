@@ -3,6 +3,9 @@ Demo Hub for different coding experiments: HttpClientDemo
 
 C#/ASP.NET MVC Blazor/Razor pages
 
+.NET 6.0 framework
+using NuGet Package: System.Net.Http.Json 6.0.0
+
 <b>HttpClient REST API for 2 different calls:</b> 
 
 - 5 days weatherforecast (weather state, daily low/high degrees) for Helsinki, Finland from https://www.metaweather.com/api/location/565346/
