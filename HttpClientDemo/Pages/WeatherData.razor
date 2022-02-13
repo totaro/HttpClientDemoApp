@@ -4,7 +4,7 @@
 @inject IHttpClientFactory _clientFactory
 
 
-@*<h3>Weather Data: @forecast.Title@forecast.Title (@forecast.Timezone || Rise: @forecast.Sun_rise | Set @forecast.Sun_set</h3>*@
+
 <h3>Weather Data </h3>
 @if (string.IsNullOrWhiteSpace(errorString) == false)
 {
@@ -52,7 +52,7 @@ else
 }
 
 @code {
-	//HttpClientDemo.Models.WeatherForecastModel
+	
 
 	
 	WeatherForecastModel? forecast;
@@ -60,39 +60,17 @@ else
 
 	int wueid = 565346;
 
-	//DateTime today = DateTime.Now;
+	
 	
 	protected override async Task OnInitializedAsync()
 	{
 
 		
-		//var request = new HttpRequestMessage(HttpMethod.Get,
-		//	"https://www.metaweather.com/api/location/565346/");
-
-		//var client = _clientFactory.CreateClient();
-
-		//HttpResponseMessage response = await client.SendAsync(request);
-
-		//if (response.IsSuccessStatusCode)
-		//{
-		//	forecast = await response.Content.ReadFromJsonAsync<WeatherForecastModel>();
-		//	errorString = null;
-		//}
-		//else
-		//{
-		//	errorString = $"There was an error to get forecast response:  {response.ReasonPhrase}";
-		//}
-
-
-		////return base.OnInitializedAsync();
-
-		//var client = _clientFactory.CreateClient();
 		var client = _clientFactory.CreateClient("meta");
 
 		try
 		{
-			//forecast = await client.GetFromJsonAsync<WeatherForecastModel>("https://www.metaweather.com/api/location/565346/");
-			//forecast = await client.GetFromJsonAsync<WeatherForecastModel>($"location/565346/{wueid}");
+			
 			forecast = await client.GetFromJsonAsync<WeatherForecastModel>($"location/{wueid}/");
 			errorString = null;
 		} 
