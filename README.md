@@ -29,7 +29,7 @@ BaseAddress name configuration (\HttpClientDemo\appsettings.json)
   
 - Current Bitcoin value (Euro, USD, GBP and JPY) currencies with 24 hours volume and change from https://api.coingecko.com/api/
   
- Model: \HttpClientDemo\Models\CryptoCurrentModel.cs
+Model: \HttpClientDemo\Models\CryptoCurrentModel.cs
 Page/HttpClient: \HttpClientDemo\Pages\CryptoData.razor (if..else response) 
 
 
