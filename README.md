@@ -1,7 +1,7 @@
 # HttpClientDemoApp
 Demo Hub for different coding experiments: HttpClientDemo
 
-C#/ASP.NET MVC Razor pages
+C#/ASP.NET MVC Blazor/Razor pages
 
 <b>HttpClient REST API for 2 different calls:</b> 
 
